@@ -1,12 +1,11 @@
 //
 //  TodoDetailViewController.swift
-//  TodoListApp_Part_01
+//  TodoListApp_Part_02
 //
+//  Created by Raj Kumar Shahu on 2020-11-21.
 //  StudentID: 300783746
-//  @Desc: This is the first part of a three-part Todo List Assignment. In this part, consists of planning and creation of the User Interface (UI) for the App. Minimal Functional logic is implemented.
-//  Created by Raj Kumar Shahu on 2020-11-06.
+//  @Desc: This is the second part of a three-part Todo List Assignment. This part consists of creation of tthe logic that powers the User Interface (UI) for the Todo App
 //  Copyright © 2020 Centennial College. All rights reserved.
-//
 
 import UIKit
 
@@ -19,13 +18,14 @@ class TodoDetailViewController: UIViewController {
     @IBOutlet weak var todoNameTextView: UITextField!
     
     @IBOutlet weak var todoDetailTextView: UITextView!
-   
+    
     @IBOutlet weak var hasDueDateSwitch: UISwitch!
- 
+    
     @IBOutlet weak var isCompleteSwitch: UISwitch!
-
+    
     @IBOutlet weak var todoDatePicker: UIDatePicker!
     
+    // todo of type TodoData
     var todo : TodoData? = nil
     
     override func viewDidLoad() {
@@ -44,8 +44,6 @@ class TodoDetailViewController: UIViewController {
             
             todoNameTextView?.text = todo!.todoItem
             todoDetailTextView?.text = todo!.detail
-            
-            print(self.todo!.hasDueDate);
             
             self.todoDatePicker.isUserInteractionEnabled = false
             self.todoDatePicker.date = todoDate!
@@ -67,18 +65,12 @@ class TodoDetailViewController: UIViewController {
                 self.todo?.isComplete = true;             
                 
                 (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
-                
-                
             }
         }
-        
-        
     }
+    
+    // Enable or disable datepicker based on switch state
     @IBAction func hasDueDateSwitchChanged(_ sender: Any) {
-        
-        print(hasDueDateSwitch.isOn)
-        
-        print(self.todoDatePicker ?? "Date")
         
         if(hasDueDateSwitch.isOn){
             self.todoDatePicker.isUserInteractionEnabled = true
@@ -89,14 +81,12 @@ class TodoDetailViewController: UIViewController {
     }
     
     @IBAction func trashButtonTapped(_ sender: UIButton) {
-        print("tapped!!!!");
         
         let deleteAlert = UIAlertController(title: "Delete", message: "Do you really want to delete this?.", preferredStyle: UIAlertController.Style.alert)
         
         deleteAlert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { (action: UIAlertAction!) in
             
             if let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext{
-                print("From Delete",self.todo!)
                 if self.todo != nil {
                     context.delete(self.todo!)
                     (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
@@ -114,7 +104,6 @@ class TodoDetailViewController: UIViewController {
     
     
     @IBAction func clearButtonTapped(_ sender: UIButton) {
-        print("clear tapped!!!!");
         let clearAlert = UIAlertController(title: "Discard changes?", message: "Do you really want to discard the changes?.", preferredStyle: UIAlertController.Style.alert)
         
         clearAlert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { (action: UIAlertAction!) in
@@ -136,7 +125,6 @@ class TodoDetailViewController: UIViewController {
         
         updateAlert.addAction(UIAlertAction(title: "Update", style: .default, handler: { (action: UIAlertAction!) in
             
-            
             if ((UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext) != nil{
                 let todoDate = self.todoDatePicker.date
                 
@@ -145,7 +133,7 @@ class TodoDetailViewController: UIViewController {
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = "EEEE MMMM d, yyyy hh:mm a"
                 let formattedTodoDate = dateFormatter.string(from: todoDate)
-            
+                
                 if self.todo != nil {
                     
                     self.todo?.todoItem = self.todoNameTextView.text
@@ -170,6 +158,5 @@ class TodoDetailViewController: UIViewController {
         }))
         
         present(updateAlert, animated: true, completion: nil)
-        
     }
 }
